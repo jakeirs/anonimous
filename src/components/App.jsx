@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './../stylesheets/App.css'
-import BeerCard from "./BeerCard";
+import BeerCards from "./BeerCards";
 
 class App extends Component {
   constructor(props) {
@@ -9,11 +9,11 @@ class App extends Component {
       itemPerPage: 6,
       // dodaj +1 przy infinitive scroll
       paged: 1,
-      beer: null
+      beers: null
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.init();
   }
 
@@ -28,28 +28,34 @@ class App extends Component {
       return response.json();
       
     } ).then( json => {
-      const beer = json[0];
-      this.setState( { beer } )
-
-      console.log(beer.name)
+      const beers = json;
+      this.setState( { beers } )
+      // console.log(beers)
     } )
   }
 
 
 
   render() {
+    // wywołanie tej funkcji tutaj powoduje zapętlenie, ponieważ zmieniam tutaj stan!!! this.setState( )
     // this.init();
+      let beers = {
+          name: 'asd',
+          image_url: '',
+          tagline: ''
+      };
+
+      beers = this.state.beers;
+
     return (
       <div>
         <div className="row">
           <div className="large-header"> 
             BeerGuru
           </div>
-          <div className="gallery-container">
-            <BeerCard
-              beer={this.state.beer}
+            <BeerCards
+              beers={beers}
             />
-          </div>  
         </div>
       </div>
     )
