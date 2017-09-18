@@ -4,10 +4,14 @@
   "private": true,
   "dependencies": {
     "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "react-modal": "^2.3.2"
   },
   "devDependencies": {
-    "react-scripts": "1.0.13"
+    "node-sass": "^4.5.3",
+    "react-scripts": "1.0.13",
+    "sass-loader": "^6.0.6",
+    "webpack": "^3.5.6"
   },
   "scripts": {
     "start": "react-scripts start",

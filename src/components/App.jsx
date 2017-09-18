@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './../stylesheets/App.css'
 import BeerCards from "./BeerCards";
 
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +31,7 @@ class App extends Component {
     } ).then( json => {
       const beers = json;
       this.setState( { beers } )
-      // console.log(beers)
+      // console.log('array', beers)
     } )
   }
 
@@ -40,6 +41,7 @@ class App extends Component {
     // wywołanie tej funkcji tutaj powoduje zapętlenie, ponieważ zmieniam tutaj stan!!! this.setState( )
     // this.init();
       let beers = {
+          id: '',
           name: 'asd',
           image_url: '',
           tagline: ''
