@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
 import ModalContent from './ModalContent';
+// import BeerCard from './BeerCard';
 import './../stylesheets/App.css'
 
 class BeerCards extends Component {
@@ -11,25 +12,43 @@ class BeerCards extends Component {
             name: '',
             tagline: '',
             image_url: '',
-            modalIsOpen: false
+            modalIsOpen: false,
+            currentBeer: null
         }
 
+    }
+
+    componentDidMount() {
+        window.addEventListener('scroll', this.onScroll, false);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
     }
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.onScroll, false);
+    }
+
+    onScroll = () => {
+        if (
+            (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 200)
+            && this.props.beers.length
+            && !this.props.isLoading
+        ) {
+            this.props.onPaginatedSearch();
+        }
+    }
     
-    openModal(event) {
+    openModal = (e, data) => {
         this.setState({
             modalIsOpen: true,
             id: ''
         });
-
-        event.preventDefault();
-        event.stopPropagation();
-        console.log(this);
+        console.log(data)
+        // event.preventDefault();
+        // event.stopPropagation();
     }
 
-    closeModal() {
+    closeModal = () => {
         this.setState({modalIsOpen: false});
     }
 
@@ -47,13 +66,12 @@ class BeerCards extends Component {
                 <div>
                     <div className="gallery-container">
                     {beers.map((beer, key) => {
-                        {/* console.log(beer.id) */}
                         
                         return (
                             <div
                                 className="beer-card"
-                                id={beer.id}
-                                onClick={this.openModal}
+                                id={beer}
+                                onClick={(e) => this.openModal(e, beer)}
                                 key={key}
                             >
                                 <img className="beer-card__img" src={beer.image_url} />
@@ -63,12 +81,16 @@ class BeerCards extends Component {
                         )
                     })}
                     </div>
+                    <div className="row row--loader-container">
+                        {this.props.isLoading && <img src={require("./../assets/loader.gif")}/>}
+                    </div>
                     <Modal
                         className="modal"
                         isOpen={this.state.modalIsOpen}
                         onAfterOpen={this.afterOpenModal}
                         onRequestClose={this.closeModal}
-                        contentLabel="Example Modal"
+                        contentLabel="Beer Detail Modal"
+                        currentBeer={this.state.currentBeer}
                     >
                     <button onClick={this.closeModal}>close</button>
                         <ModalContent/>
@@ -77,7 +99,7 @@ class BeerCards extends Component {
                 
             )
         } else {
-            return false
+            return null
 
         }
     }

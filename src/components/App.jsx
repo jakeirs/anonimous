@@ -1,67 +1,87 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './../stylesheets/App.css'
 import BeerCards from "./BeerCards";
 
+const applyUpdateResult = (result, page) => (prevState) => ({
+    beers: [...(prevState.beers), ...result],
+    page: page + 1,
+    isLoading: false,
+});
+
+const applySetResult = (result, page) => (prevState) => ({
+    beers: result,
+    page: page + 1,
+    isLoading: false,
+});
+
+// const BASE_URL = 'https://api.punkapi.com/v2/beers';
+const getFetchUrl = (page) => {
+    return `https://api.punkapi.com/v2/beers?page=${page}&per_page=6`;
+}
+
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      itemPerPage: 6,
-      // dodaj +1 przy infinitive scroll
-      paged: 1,
-      beers: null
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            beers: [],
+            page: 1,
+            isLoading: false
+        }
     }
-  }
 
-  componentDidMount() {
-    this.init();
-  }
+    componentDidMount() {
+        this.onInit();
+    }
 
-  init() {
-    const BASE_URL = 'https://api.punkapi.com/v2/beers';
-    let FETCH_URL = `${BASE_URL}?page=${this.state.paged}&per_page=${this.state.itemPerPage}` ;
+    onInit = () => {
+        this.fetchBeers( 1 );
+    }
 
-    fetch( FETCH_URL, {
-      method: 'GET'
-    } ).then( response => {
-      
-      return response.json();
-      
-    } ).then( json => {
-      const beers = json;
-      this.setState( { beers } )
-      // console.log('array', beers)
-    } )
-  }
+    onPaginatedSearch = (e) =>
+        this.fetchBeers(this.state.page);
 
 
+    fetchBeers = ( page ) => {
+        this.setState({isLoading: true});
+        // console.log(getFetchUrl(1))
+        fetch(getFetchUrl(page))
+            .then(response => response.json())
+            .then(result => {
+                console.log('fetch result', result)
+                this.onSetResult(result, page)
+            });
+    }
 
-  render() {
-    // wywołanie tej funkcji tutaj powoduje zapętlenie, ponieważ zmieniam tutaj stan!!! this.setState( )
-    // this.init();
-      let beers = {
-          id: '',
-          name: 'asd',
-          image_url: '',
-          tagline: ''
-      };
+    onSetResult = (result, page) => {
+        return page === 1
+            ? this.setState(applySetResult(result, page))
+            : this.setState(applyUpdateResult(result, page));
+    }
 
-      beers = this.state.beers;
+    timeOuter = () => {
+        console.log('before 2 sek', this.state)
+        setTimeout( ()=> {console.log('after 2 sek ', this.state.beers)}, 2000 )
+    }
 
-    return (
-      <div>
-        <div className="row">
-          <div className="large-header"> 
-            BeerGuru
-          </div>
-            <BeerCards
-              beers={beers}
-            />
-        </div>
-      </div>
-    )
-  }
+    render() {
+        return (
+            <div>
+                <div className="row">
+                    <div className="large-header">
+                        Infinitive scroll
+                    </div>
+                    <BeerCards
+                        beers={this.state.beers}
+                        page={this.state.page}
+                        onPaginatedSearch={this.onPaginatedSearch}
+                        isLoading={this.state.isLoading}
+                    />
+                </div>
+            </div>
+        )
+    }
 }
 
 export default App;

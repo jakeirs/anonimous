@@ -4,6 +4,9 @@ class Popup extends Component {
 
 
   render() {
+    const { currentBeer } = this.props;
+    // console.log('frommodal',currentBeer)
+      console.log(this.props)
     return (
       <div className="popup">
         <div className="popup__upper-part">
