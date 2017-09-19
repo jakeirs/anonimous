@@ -4,6 +4,8 @@ import ModalContent from './ModalContent';
 // import BeerCard from './BeerCard';
 import './../stylesheets/App.css'
 
+const htmlDocument = document.querySelector('html');
+
 class BeerCards extends Component {
     constructor(props) {
         super(props);
@@ -13,7 +15,10 @@ class BeerCards extends Component {
             tagline: '',
             image_url: '',
             modalIsOpen: false,
-            currentBeer: null
+            currentBeer: null,
+            nextBeer: null,
+            prevBeer: null,
+            twoAheadBeer: null
         }
 
     }
@@ -22,6 +27,7 @@ class BeerCards extends Component {
         window.addEventListener('scroll', this.onScroll, false);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.timeOuter()
     }
 
     componentWillUnmount() {
@@ -37,28 +43,33 @@ class BeerCards extends Component {
             this.props.onPaginatedSearch();
         }
     }
+
+    timeOuter = () => {
+        console.log('before 2 sek', this.state)
+        setTimeout( ()=> {console.log('after 2 sek ', this.state)}, 2000 )
+    }
     
-    openModal = (e, data) => {
+    openModal = (e, current, prev, next, twoAhead) => {
         this.setState({
             modalIsOpen: true,
-            id: ''
+            id: '',
+            currentBeer: current,
+            nextBeer: next,
+            prevBeer: prev,
+            twoAheadBeer: twoAhead
         });
-        console.log(data)
-        // event.preventDefault();
-        // event.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
+        htmlDocument.classList.add('no-scroll')
     }
 
     closeModal = () => {
         this.setState({modalIsOpen: false});
+        htmlDocument.classList.remove('no-scroll')
     }
 
     render() {
-        let beers = {
-            id: '',
-            name: 'asd',
-            image_url: '',
-            tagline: ''
-        };
+        let beers = {};
 
         if (this.props.beers !== null) {
             beers = this.props.beers;
@@ -70,8 +81,8 @@ class BeerCards extends Component {
                         return (
                             <div
                                 className="beer-card"
-                                id={beer}
-                                onClick={(e) => this.openModal(e, beer)}
+                                id={beer.id}
+                                onClick={(e) => this.openModal(e, beer, beers[key - 1], beers[ key + 1] , beers[ key + 2])}
                                 key={key}
                             >
                                 <img className="beer-card__img" src={beer.image_url} />
@@ -90,17 +101,20 @@ class BeerCards extends Component {
                         onAfterOpen={this.afterOpenModal}
                         onRequestClose={this.closeModal}
                         contentLabel="Beer Detail Modal"
-                        currentBeer={this.state.currentBeer}
                     >
                     <button onClick={this.closeModal}>close</button>
-                        <ModalContent/>
+                        <ModalContent
+                            currentBeer={this.state.currentBeer}
+                            nextBeer={this.state.prevBeer}
+                            prevBeer={this.state.nextBeer}
+                            twoAheadBeer={this.state.twoAheadBeer}
+                        />
                     </Modal>
                 </div>
                 
             )
         } else {
             return null
-
         }
     }
 }
