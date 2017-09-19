@@ -27,7 +27,6 @@ class BeerCards extends Component {
         window.addEventListener('scroll', this.onScroll, false);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
-        this.timeOuter()
     }
 
     componentWillUnmount() {
@@ -44,10 +43,6 @@ class BeerCards extends Component {
         }
     }
 
-    timeOuter = () => {
-        console.log('before 2 sek', this.state)
-        setTimeout( ()=> {console.log('after 2 sek ', this.state)}, 2000 )
-    }
     
     openModal = (e, current, prev, next, twoAhead) => {
         this.setState({

@@ -23,7 +23,6 @@ class ModalContent extends Component {
 
   render() {
       const { currentBeer, prevBeer, nextBeer, twoAheadBeer } = this.state;
-      console.log(currentBeer, prevBeer, nextBeer, twoAheadBeer)
     return (
       <div className="modal">
         <div className="modal__upper-part">

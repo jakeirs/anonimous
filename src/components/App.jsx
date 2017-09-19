@@ -45,11 +45,9 @@ class App extends Component {
 
     fetchBeers = ( page ) => {
         this.setState({isLoading: true});
-        // console.log(getFetchUrl(1))
         fetch(getFetchUrl(page))
             .then(response => response.json())
             .then(result => {
-                console.log('fetch result', result)
                 this.onSetResult(result, page)
             });
     }
@@ -60,17 +58,13 @@ class App extends Component {
             : this.setState(applyUpdateResult(result, page));
     }
 
-    timeOuter = () => {
-        console.log('before 2 sek', this.state)
-        setTimeout( ()=> {console.log('after 2 sek ', this.state.beers)}, 2000 )
-    }
 
     render() {
         return (
             <div>
                 <div className="row">
                     <div className="large-header">
-                        Infinitive scroll
+                        Beer Guru
                     </div>
                     <BeerCards
                         beers={this.state.beers}
