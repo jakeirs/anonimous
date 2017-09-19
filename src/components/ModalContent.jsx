@@ -7,19 +7,22 @@ class ModalContent extends Component {
     super(props);
 
     this.state = {
-      currentBeer: {}
+        currentBeer: this.props.currentBeer,
+        prevBeer: this.props.prevBeer,
+        nextBeer: this.props.nextBeer,
+        twoAheadBeer: this.props.twoAheadBeer
     }
   }
 
+
   onSuggectionClick = (e, clickedBeer) => {
-    console.log(clickedBeer)
     this.setState({
         currentBeer: clickedBeer
     })
   }
 
   render() {
-      const { currentBeer, prevBeer, nextBeer, twoAheadBeer } = this.props;
+      const { currentBeer, prevBeer, nextBeer, twoAheadBeer } = this.state;
       console.log(currentBeer, prevBeer, nextBeer, twoAheadBeer)
     return (
       <div className="modal">
@@ -59,13 +62,17 @@ class ModalContent extends Component {
                   {prevBeer.name}
               </div>
             </div>
-            <div className="modal__suggestion__item">
+            <div className="modal__suggestion__item"
+              onClick={(e) => this.onSuggectionClick(e, nextBeer)}
+            >
               <img className="modal__suggestion__img" src={nextBeer.image_url}/>
               <div className="modal__suggestion__title">
                   {nextBeer.name}
               </div>
             </div>
-            <div className="modal__suggestion__item">
+            <div className="modal__suggestion__item"
+               onClick={(e) => this.onSuggectionClick(e, twoAheadBeer)}
+            >
               <img className="modal__suggestion__img" src={twoAheadBeer.image_url}/>
               <div className="modal__suggestion__title">
                   {twoAheadBeer.name}
