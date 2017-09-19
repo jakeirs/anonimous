@@ -37,9 +37,9 @@ class ModalContent extends Component {
                 {currentBeer.tagline}
             </div>
             <ul className="modal__detail-numbers">
-              <li>IBU: <span className="modal__details-values">4.3</span></li>
-              <li>AB: <span className="modal__details-values">4.3</span></li>
-              <li>EBC: <span className="modal__details-values">4.3</span></li>
+              <li>IBU: <span className="modal__details-values">{currentBeer.ibu}</span></li>
+              <li>AB: <span className="modal__details-values">{currentBeer.abv}</span></li>
+              <li>EBC: <span className="modal__details-values">{currentBeer.ebc}</span></li>
             </ul>
             <div className="modal__description"> 
                 {currentBeer.description}
